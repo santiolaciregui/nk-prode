@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Elegant Dark Palette */
+  --color-bg-main: #0A0A0B;
+  --color-bg-nav: #0F0F11;
+  --color-bg-surface: #141417;
+  --color-bg-input: #1A1A1E;
+  
+  --color-accent-cyan: #06b6d4;
+  --color-accent-emerald: #10b981;
+  --color-accent-gold: #f0a500;
+  
+  --color-text-slate-200: #e2e8f0;
+  --color-text-slate-400: #94a3b8;
+  --color-text-slate-500: #64748b;
+  
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-strong: rgba(255, 255, 255, 0.1);
+}
+
+@layer base {
+  body {
+    @apply antialiased bg-bg-main text-text-slate-200;
+  }
+}
