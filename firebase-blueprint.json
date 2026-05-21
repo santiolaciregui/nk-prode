@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and subscription status",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "status": { "type": "string", "enum": ["pending", "active", "inactive"] },
+        "transferReceipt": { "type": "string", "description": "URL or base64 of the transfer receipt" },
+        "points": { "type": "number" },
+        "exactCount": { "type": "number" },
+        "winnerCount": { "type": "number" }
+      },
+      "required": ["uid", "displayName", "status", "role"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "World Cup Match details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "homeTeam": { "type": "string" },
+        "awayTeam": { "type": "string" },
+        "homeFlag": { "type": "string" },
+        "awayFlag": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "round": { "type": "string" },
+        "group": { "type": "string" },
+        "homeScore": { "type": "number" },
+        "awayScore": { "type": "number" },
+        "isFinished": { "type": "boolean" }
+      },
+      "required": ["id", "homeTeam", "awayTeam", "date", "round"]
+    },
+    "Prediction": {
+      "title": "Prediction",
+      "description": "User prediction for a match",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "matchId": { "type": "string" },
+        "homeScore": { "type": "number" },
+        "awayScore": { "type": "number" },
+        "pointsEarned": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "matchId", "homeScore", "awayScore"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "User",
+      "description": "Collection of user profiles"
+    },
+    "matches": {
+      "schema": "Match",
+      "description": "Collection of matches"
+    },
+    "predictions": {
+      "schema": "Prediction",
+      "description": "Collection of user predictions"
+    }
+  }
+}
