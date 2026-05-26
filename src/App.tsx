@@ -122,7 +122,6 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
     path
   }
   console.error('Firestore Error: ', JSON.stringify(errInfo));
-  // In a real app we might show a toast, but throwing crashes the app, especially for logout snapshot cleanup.
 }
 
 const ADMIN_EMAILS = import.meta.env.VITE_ADMIN_EMAILS 
