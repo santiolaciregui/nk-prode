@@ -125,6 +125,10 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   // In a real app we might show a toast, but throwing crashes the app, especially for logout snapshot cleanup.
 }
 
+const ADMIN_EMAILS = import.meta.env.VITE_ADMIN_EMAILS 
+  ? import.meta.env.VITE_ADMIN_EMAILS.split(',').map((email: string) => email.trim()) 
+  : [];
+
 export default function App() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -141,7 +145,7 @@ export default function App() {
           if (docSnap.exists()) {
             const data = docSnap.data() as UserProfile;
             // Auto-promote admin
-            if (data.email === 'santi.olaciregui13@gmail.com' && (data.role !== 'admin' || data.status !== 'active')) {
+            if (data.email && ADMIN_EMAILS.includes(data.email) && (data.role !== 'admin' || data.status !== 'active')) {
               try {
                 await updateDoc(profileRef, { role: 'admin', status: 'active' });
               } catch (e) {
@@ -228,7 +232,7 @@ export default function App() {
     return <LoginView onLogin={handleLogin} />;
   }
 
-  if (profile?.status === 'pending' && user?.email !== 'santi.olaciregui13@gmail.com') {
+  if (profile?.status === 'pending' && (!user?.email || !ADMIN_EMAILS.includes(user.email))) {
     return <WelcomePaymentView profile={profile} onLogout={handleLogout} />;
   }
 
@@ -284,7 +288,7 @@ export default function App() {
           <NavTab active={activeTab === 'partidos'} onClick={() => setActiveTab('partidos')} icon={<Calendar className="w-4 h-4" />} label="Partidos" />
           <NavTab active={activeTab === 'ranking'} onClick={() => setActiveTab('ranking')} icon={<Trophy className="w-4 h-4" />} label="Ranking" />
           <NavTab active={activeTab === 'mispron'} onClick={() => setActiveTab('mispron')} icon={<CheckCircle className="w-4 h-4" />} label="Mis Pronósticos" />
-          {(profile?.role === 'admin' || user?.email === 'santi.olaciregui13@gmail.com') && (
+          {(profile?.role === 'admin' || (user?.email && ADMIN_EMAILS.includes(user.email))) && (
             <NavTab active={activeTab === 'admin'} onClick={() => setActiveTab('admin')} icon={<ShieldCheck className="w-4 h-4" />} label="Admin" />
           )}
         </div>
@@ -295,7 +299,7 @@ export default function App() {
           {activeTab === 'partidos' && <MatchesView key="matches" profile={profile!} />}
           {activeTab === 'ranking' && <RankingView key="ranking" profile={profile!} />}
           {activeTab === 'mispron' && <MyPredictionsView key="my-preds" profile={profile!} />}
-          {activeTab === 'admin' && (profile?.role === 'admin' || user?.email === 'santi.olaciregui13@gmail.com') && <AdminView key="admin" />}
+          {activeTab === 'admin' && (profile?.role === 'admin' || (user?.email && ADMIN_EMAILS.includes(user.email))) && <AdminView key="admin" />}
         </AnimatePresence>
       </main>
     </div>
